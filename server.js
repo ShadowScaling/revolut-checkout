@@ -9,7 +9,6 @@ app.use(cors());
 
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
-
   console.log("🔔 Body brut reçu :", req.body);
   console.log("🔔 Nouvelle requête reçue :", type);
 
@@ -44,12 +43,13 @@ app.post('/api/create-checkout', async (req, res) => {
           'Content-Type': 'application/json',
           'Revolut-Api-Version': '2023-10-01'
         },
-        transformRequest: [(data) => JSON.stringify(data)]
+        transformRequest: [(data) => JSON.stringify(data)] // ✅ 🔐 ligne CRUCIALE !
       }
     );
 
     const checkout_url = response.data.checkout_url;
     console.log("✅ Checkout URL créée :", checkout_url);
+
     res.json({ checkout_url });
   } catch (error) {
     console.error('❌ Erreur Revolut :', error.response?.data || error.message);
