@@ -10,6 +10,9 @@ app.use(cors());
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
 
+  // 🔔 LOG DEBUG
+  console.log("🔔 Nouvelle requête reçue :", type);
+
   const amount = type === 'avecBump' ? 7400 : 4700;
   const description = type === 'avecBump' ? 'ShadowScaling + Bump' : 'ShadowScaling';
 
@@ -24,7 +27,7 @@ app.post('/api/create-checkout', async (req, res) => {
         capture_mode: 'AUTOMATIC',
         country: 'FR',
         payment_method: {
-          type: 'card' // important !
+          type: 'card'
         },
         merchant_order_ext_ref: `order-${Date.now()}`,
         description,
@@ -35,7 +38,7 @@ app.post('/api/create-checkout', async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
-          'Revolut-Api-Version': '2023-10-01' // 🔐 Obligatoire
+          'Revolut-Api-Version': '2023-10-01'
         },
       }
     );
