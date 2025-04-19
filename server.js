@@ -58,3 +58,10 @@ app.post('/webhook', express.json(), (req, res) => {
 
   res.sendStatus(200); // Toujours répondre 200 pour confirmer à Revolut que le webhook a été bien reçu
 });
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`✅ Serveur lancé sur le port ${PORT}`);
+});
+
