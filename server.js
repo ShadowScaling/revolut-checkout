@@ -4,44 +4,48 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(express.json()); // ✅ indispensable pour parser le JSON
+app.use(express.json());
 app.use(cors());
 
+// ✅ ROUTE DE CRÉATION DE CHECKOUT
 app.post('/api/create-checkout', async (req, res) => {
-  console.log("🔔 Body brut reçu :", req.body); // ✅ DEBUG
-  
   const { type } = req.body;
-  console.log(`🔔 Nouvelle requête reçue : ${type}`);
 
-  const amount = type === 'avecBump' ? 7400 : 4700;
+  console.log("🔔 Body brut reçu :", req.body);
+  console.log("🔔 Nouvelle requête reçue :", type);
+
+  const amountValue = type === 'avecBump' ? 7400 : 4700;
   const description = type === 'avecBump' ? 'ShadowScaling + Bump' : 'ShadowScaling';
 
+  const payload = {
+    amount: {
+      value: amountValue,
+      currency: 'EUR'
+    },
+    capture_mode: 'AUTOMATIC',
+    country: 'FR',
+    payment_method: {
+      type: 'card'
+    },
+    merchant_order_ext_ref: `order-${Date.now()}`,
+    description,
+    return_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
+    cancel_url: 'https://www.10kchallenge.fr/shadow-scaling-bondecommande'
+  };
+
+  console.log("📦 Payload envoyé à Revolut :", JSON.stringify(payload, null, 2));
+
   try {
-    const response = await axios.post(
-      'https://merchant.revolut.com/api/orders',
-      {
-        amount: {
-          value: amount,
-          currency: 'EUR'
-        },
-        capture_mode: 'AUTOMATIC',
-        country: 'FR',
-        payment_method: {
-          type: 'card'
-        },
-        merchant_order_ext_ref: `order-${Date.now()}`,
-        description,
-        return_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
-        cancel_url: 'https://www.10kchallenge.fr/shadow-scaling-bondecommande'
+    const response = await axios({
+      method: 'post',
+      url: 'https://merchant.revolut.com/api/orders',
+      headers: {
+        Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Revolut-Api-Version': '2023-10-01'
       },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
-          'Content-Type': 'application/json',
-          'Revolut-Api-Version': '2023-10-01'
-        }
-      }
-    );
+      data: JSON.stringify(payload)
+    });
 
     const checkout_url = response.data.checkout_url;
     console.log("✅ Checkout URL créée :", checkout_url);
@@ -52,6 +56,7 @@ app.post('/api/create-checkout', async (req, res) => {
   }
 });
 
+// ✅ ROUTE WEBHOOK
 app.post('/webhook', express.json(), (req, res) => {
   const event = req.body;
 
@@ -64,6 +69,7 @@ app.post('/webhook', express.json(), (req, res) => {
   res.sendStatus(200);
 });
 
+// ✅ LANCEMENT DU SERVEUR
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Serveur lancé sur le port ${PORT}`);
