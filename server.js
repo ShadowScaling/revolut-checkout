@@ -9,6 +9,7 @@ app.use(cors());
 
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
+
   console.log("🔔 Body brut reçu :", req.body);
   console.log("🔔 Nouvelle requête reçue :", type);
 
@@ -16,10 +17,8 @@ app.post('/api/create-checkout', async (req, res) => {
   const description = type === 'avecBump' ? 'ShadowScaling + Bump' : 'ShadowScaling';
 
   const payload = {
-    amount: {
-      value: amountValue,
-      currency: 'EUR'
-    },
+    amount: amountValue, // 💥 ici la correction
+    currency: 'EUR',     // 💥 aussi ici
     capture_mode: 'AUTOMATIC',
     country: 'FR',
     payment_method: {
@@ -42,8 +41,7 @@ app.post('/api/create-checkout', async (req, res) => {
           Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
           'Revolut-Api-Version': '2023-10-01'
-        },
-        transformRequest: [(data) => JSON.stringify(data)] // ✅ 🔐 ligne CRUCIALE !
+        }
       }
     );
 
