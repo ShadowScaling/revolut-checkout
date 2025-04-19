@@ -7,7 +7,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// ✅ ROUTE DE CRÉATION DE CHECKOUT
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
 
@@ -22,7 +21,6 @@ app.post('/api/create-checkout', async (req, res) => {
       value: amountValue,
       currency: 'EUR'
     },
-    capture_mode: 'automatic',
     country: 'FR',
     payment_method: {
       type: 'card'
@@ -38,11 +36,12 @@ app.post('/api/create-checkout', async (req, res) => {
   try {
     const response = await axios.post(
       'https://merchant.revolut.com/api/orders',
-      JSON.stringify(payload), // ✅ on stringify manuellement
+      payload,
       {
         headers: {
-          Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
+          'Authorization': `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Revolut-Api-Version': '2023-10-01'
         }
       }
@@ -57,7 +56,6 @@ app.post('/api/create-checkout', async (req, res) => {
   }
 });
 
-// ✅ WEBHOOK
 app.post('/webhook', express.json(), (req, res) => {
   const event = req.body;
 
