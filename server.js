@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// ✅ ROUTE DE CRÉATION DE CHECKOUT
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
 
@@ -17,9 +18,11 @@ app.post('/api/create-checkout', async (req, res) => {
   const description = type === 'avecBump' ? 'ShadowScaling + Bump' : 'ShadowScaling';
 
   const payload = {
-    amount: amountValue, // 💥 ici la correction
-    currency: 'EUR',     // 💥 aussi ici
-    capture_mode: 'AUTOMATICALLY',
+    amount: {
+      value: amountValue,
+      currency: 'EUR'
+    },
+    capture_mode: 'automatic', // ✅ En minuscule comme demandé
     country: 'FR',
     payment_method: {
       type: 'card'
@@ -55,6 +58,7 @@ app.post('/api/create-checkout', async (req, res) => {
   }
 });
 
+// ✅ ROUTE WEBHOOK
 app.post('/webhook', express.json(), (req, res) => {
   const event = req.body;
 
