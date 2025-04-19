@@ -23,6 +23,9 @@ app.post('/api/create-checkout', async (req, res) => {
         },
         capture_mode: 'AUTOMATIC',
         country: 'FR',
+        payment_method: {
+          type: 'card' // important !
+        },
         merchant_order_ext_ref: `order-${Date.now()}`,
         description,
         complete_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
@@ -32,7 +35,7 @@ app.post('/api/create-checkout', async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
-          'Revolut-Api-Version': '2023-10-01' // ✅ HEADER AJOUTÉ ICI
+          'Revolut-Api-Version': '2023-10-01' // 🔐 Obligatoire
         },
       }
     );
@@ -52,7 +55,6 @@ app.post('/webhook', express.json(), (req, res) => {
   if (event.event === 'ORDER_COMPLETED') {
     const orderId = event.order_id;
     const externalRef = event.merchant_order_ext_ref;
-
     console.log(`✅ Paiement confirmé pour la commande : ${orderId} | Ref : ${externalRef}`);
   }
 
