@@ -23,8 +23,8 @@ app.post('/api/create-checkout', async (req, res) => {
         capture_mode: 'AUTOMATIC',
         country: 'FR',
         customer_email: 'test@example.com',
-        complete_url: 'https://www.10kchallenge.fr/acces-shadowscaling',  // ✅ Redirection après paiement
-        cancel_url: 'https://www.10kchallenge.fr/shadow-scalingbondecommande'  // 🔙 Si paiement annulé
+        complete_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
+        cancel_url: 'https://www.10kchallenge.fr/shadow-scalingbondecommande'
       },
       {
         headers: {
@@ -33,8 +33,10 @@ app.post('/api/create-checkout', async (req, res) => {
         },
       }
     );
-
+    
+    console.log("✅ Lien Revolut généré :", response.data.checkout_url); // <= AJOUT ICI
     res.json({ checkout_url: response.data.checkout_url });
+    
   } catch (error) {
     console.error('Erreur Revolut :', error.response?.data || error.message);
     res.status(500).json({ error: 'Erreur création du lien Revolut' });
