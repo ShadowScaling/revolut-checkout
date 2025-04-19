@@ -37,13 +37,14 @@ app.post('/api/create-checkout', async (req, res) => {
   try {
     const response = await axios.post(
       'https://merchant.revolut.com/api/orders',
-      JSON.stringify(payload), // ✅ Fix ici
+      payload,
       {
         headers: {
           Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
           'Revolut-Api-Version': '2023-10-01'
-        }
+        },
+        transformRequest: [(data) => JSON.stringify(data)]
       }
     );
 
