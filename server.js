@@ -22,7 +22,6 @@ app.post('/api/create-checkout', async (req, res) => {
       value: amountValue,
       currency: 'EUR'
     },
-    capture_mode: 'automatic', // ✅ En minuscule comme demandé
     country: 'FR',
     payment_method: {
       type: 'card'
