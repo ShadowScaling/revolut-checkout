@@ -23,8 +23,8 @@ app.post('/api/create-checkout', async (req, res) => {
         capture_mode: 'AUTOMATIC',
         country: 'FR',
         customer_email: 'test@example.com',
-        complete_url: 'https://www.10kchallenge.fr/shadow-scaling',  // ✅ Redirection après paiement
-        cancel_url: 'https://www.10kchallenge.fr/shadow-scalingbondecommande'  // 🔙 Redirection si annulation
+        complete_url: 'https://www.10kchallenge.fr/acces-shadowscaling',  // ✅ Redirection après paiement
+        cancel_url: 'https://www.10kchallenge.fr/shadow-scalingbondecommande'  // 🔙 Si paiement annulé
       },
       {
         headers: {
