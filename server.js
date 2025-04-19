@@ -19,7 +19,7 @@ app.post('/api/create-checkout', async (req, res) => {
   const payload = {
     amount: amountValue, // 💥 ici la correction
     currency: 'EUR',     // 💥 aussi ici
-    capture_mode: 'AUTOMATIC',
+    capture_mode: 'AUTOMATICALLY',
     country: 'FR',
     payment_method: {
       type: 'card'
