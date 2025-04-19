@@ -4,8 +4,17 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(express.json());
+// Allow all origins (for dev)
 app.use(cors());
+
+// Or, for custom CORS settings:
+app.use(cors({
+  origin: '*', // Or restrict to a specific domain
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
+}));
+
+app.use(express.json());
 
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
