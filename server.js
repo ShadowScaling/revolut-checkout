@@ -26,7 +26,7 @@ app.post('/api/create-checkout', async (req, res) => {
       type: 'card'
     },
     merchant_order_ext_ref: `order-${Date.now()}`,
-    description,
+    description: description,
     return_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
     cancel_url: 'https://www.10kchallenge.fr/shadow-scaling-bondecommande'
   };
