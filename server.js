@@ -7,7 +7,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
 
@@ -23,7 +22,9 @@ app.post('/api/create-checkout', async (req, res) => {
         description,
         capture_mode: 'AUTOMATIC',
         country: 'FR',
-        customer_email: 'test@example.com' // optionnel
+        customer_email: 'test@example.com',
+        complete_url: 'https://www.10kchallenge.fr/shadow-scaling',  // ✅ Redirection après paiement
+        cancel_url: 'https://www.10kchallenge.fr/shadow-scalingbondecommande'  // 🔙 Redirection si annulation
       },
       {
         headers: {
@@ -43,20 +44,14 @@ app.post('/api/create-checkout', async (req, res) => {
 app.post('/webhook', express.json(), (req, res) => {
   const event = req.body;
 
-  // Vérifie que l'événement reçu est bien un paiement réussi
   if (event.event === 'ORDER_COMPLETED') {
     const orderId = event.order_id;
     const externalRef = event.merchant_order_ext_ref;
 
     console.log(`✅ Paiement confirmé pour la commande : ${orderId} | Ref : ${externalRef}`);
-
-    // ICI TU PEUX FAIRE CE QUE TU VEUX :
-    // - enregistrer l'utilisateur dans une base
-    // - envoyer un email de confirmation
-    // - ou notifier côté frontend une redirection personnalisée
   }
 
-  res.sendStatus(200); // Toujours répondre 200 pour confirmer à Revolut que le webhook a été bien reçu
+  res.sendStatus(200);
 });
 
 const PORT = process.env.PORT || 3000;
@@ -64,4 +59,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Serveur lancé sur le port ${PORT}`);
 });
-
