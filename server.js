@@ -32,6 +32,7 @@ app.post('/api/create-checkout', async (req, res) => {
         headers: {
           Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
+          'Revolut-Api-Version': '2023-10-01' // ✅ HEADER AJOUTÉ ICI
         },
       }
     );
