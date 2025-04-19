@@ -22,6 +22,7 @@ app.post('/api/create-checkout', async (req, res) => {
       value: amountValue,
       currency: 'EUR'
     },
+    capture_mode: 'automatic',
     country: 'FR',
     payment_method: {
       type: 'card'
@@ -37,7 +38,7 @@ app.post('/api/create-checkout', async (req, res) => {
   try {
     const response = await axios.post(
       'https://merchant.revolut.com/api/orders',
-      payload,
+      JSON.stringify(payload), // ✅ on stringify manuellement
       {
         headers: {
           Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
@@ -49,7 +50,6 @@ app.post('/api/create-checkout', async (req, res) => {
 
     const checkout_url = response.data.checkout_url;
     console.log("✅ Checkout URL créée :", checkout_url);
-
     res.json({ checkout_url });
   } catch (error) {
     console.error('❌ Erreur Revolut :', error.response?.data || error.message);
@@ -57,7 +57,7 @@ app.post('/api/create-checkout', async (req, res) => {
   }
 });
 
-// ✅ ROUTE WEBHOOK
+// ✅ WEBHOOK
 app.post('/webhook', express.json(), (req, res) => {
   const event = req.body;
 
