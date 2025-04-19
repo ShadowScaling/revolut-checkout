@@ -17,18 +17,10 @@ app.post('/api/create-checkout', async (req, res) => {
   const description = type === 'avecBump' ? 'ShadowScaling + Bump' : 'ShadowScaling';
 
   const payload = {
-    amount: {
-      value: amountValue,
-      currency: 'EUR'
-    },
-    country: 'FR',
-    payment_method: {
-      type: 'card'
-    },
-    merchant_order_ext_ref: `order-${Date.now()}`,
-    description: description,
-    return_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
-    cancel_url: 'https://www.10kchallenge.fr/shadow-scaling-bondecommande'
+    amount: amountValue,
+    currency: 'EUR',
+    description,
+    redirect_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
   };
 
   console.log("📦 Payload envoyé à Revolut :", JSON.stringify(payload, null, 2));
@@ -42,7 +34,7 @@ app.post('/api/create-checkout', async (req, res) => {
           'Authorization': `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Revolut-Api-Version': '2023-10-01'
+          'Revolut-Api-Version': '2024-09-01'
         }
       }
     );
