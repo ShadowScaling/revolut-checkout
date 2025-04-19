@@ -4,10 +4,12 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json()); // ✅ indispensable pour parser le JSON
 app.use(cors());
 
 app.post('/api/create-checkout', async (req, res) => {
+  console.log("🔔 Body brut reçu :", req.body); // ✅ DEBUG
+  
   const { type } = req.body;
   console.log(`🔔 Nouvelle requête reçue : ${type}`);
 
@@ -24,11 +26,11 @@ app.post('/api/create-checkout', async (req, res) => {
         },
         capture_mode: 'AUTOMATIC',
         country: 'FR',
-        merchant_order_ext_ref: `order-${Date.now()}`,
-        description,
         payment_method: {
           type: 'card'
         },
+        merchant_order_ext_ref: `order-${Date.now()}`,
+        description,
         return_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
         cancel_url: 'https://www.10kchallenge.fr/shadow-scaling-bondecommande'
       },
