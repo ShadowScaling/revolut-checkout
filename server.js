@@ -18,14 +18,14 @@ app.post('/api/create-checkout', async (req, res) => {
     const response = await axios.post(
       'https://merchant.revolut.com/api/orders',
       {
-        order_amount: {
-          amount: amount,
+        amount: {
+          value: amount,
           currency: 'EUR'
         },
         capture_mode: 'AUTOMATIC',
         country: 'FR',
         merchant_order_ext_ref: `order-${Date.now()}`,
-        description: description,
+        description,
         payment_method: {
           type: 'card'
         },
