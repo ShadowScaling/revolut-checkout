@@ -9,9 +9,7 @@ app.use(cors());
 
 app.post('/api/create-checkout', async (req, res) => {
   const { type } = req.body;
-
-  // 🔔 LOG DEBUG
-  console.log("🔔 Nouvelle requête reçue :", type);
+  console.log(`🔔 Nouvelle requête reçue : ${type}`);
 
   const amount = type === 'avecBump' ? 7400 : 4700;
   const description = type === 'avecBump' ? 'ShadowScaling + Bump' : 'ShadowScaling';
@@ -20,18 +18,18 @@ app.post('/api/create-checkout', async (req, res) => {
     const response = await axios.post(
       'https://merchant.revolut.com/api/orders',
       {
-        amount: {
-          value: amount,
+        order_amount: {
+          amount: amount,
           currency: 'EUR'
         },
         capture_mode: 'AUTOMATIC',
         country: 'FR',
+        merchant_order_ext_ref: `order-${Date.now()}`,
+        description: description,
         payment_method: {
           type: 'card'
         },
-        merchant_order_ext_ref: `order-${Date.now()}`,
-        description,
-        complete_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
+        return_url: 'https://www.10kchallenge.fr/acces-shadowscaling',
         cancel_url: 'https://www.10kchallenge.fr/shadow-scaling-bondecommande'
       },
       {
@@ -39,7 +37,7 @@ app.post('/api/create-checkout', async (req, res) => {
           Authorization: `Bearer ${process.env.REVOLUT_API_KEY}`,
           'Content-Type': 'application/json',
           'Revolut-Api-Version': '2023-10-01'
-        },
+        }
       }
     );
 
