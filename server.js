@@ -21,7 +21,8 @@ app.post('/api/create-checkout', async (req, res) => {
 
   console.log("🔔 Body brut reçu :", req.body);
   console.log("🔔 Nouvelle requête reçue :", type);
-
+  const userAgent = req.get('User-Agent');
+  console.log('User-Agent:', userAgent);
   const amountValue = type === 'avecBump' ? 7400 : 4700;
   const description = type === 'avecBump' ? 'ShadowScaling + Bump' : 'ShadowScaling';
 
