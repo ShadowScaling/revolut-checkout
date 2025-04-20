@@ -49,6 +49,7 @@ app.post('/api/create-checkout', async (req, res) => {
       }
     );
 
+    console.log("response: ", response);
     const checkout_url = response.data.checkout_url;
     console.log("✅ Checkout URL créée :", checkout_url);
     res.json({ checkout_url });
